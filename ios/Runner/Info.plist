@@ -6,8 +6,8 @@
 	<string>autorization for gallery</string>
 	<key>NSCameraUsageDescription</key>
 	<string>autorization for camera</string>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>$(DEVELOPMENT_LANGUAGE)</string>
+    <key>NSMicrophoneUsageDescription</key>
+	<string>autorization for mic</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
