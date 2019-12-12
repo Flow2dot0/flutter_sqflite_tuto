@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_sqlite_from_tuto/model/article.dart';
 import 'package:flutter_sqlite_from_tuto/model/database_client.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddArticle extends StatefulWidget{
 
@@ -64,11 +65,11 @@ class _AddArticleState extends State<AddArticle> {
                     children: <Widget>[
                       IconButton(
                           icon: Icon(Icons.camera_enhance),
-                          onPressed: null
+                          onPressed: () => getImage(ImageSource.camera)
                       ),
                       IconButton(
                           icon: Icon(Icons.photo_library),
-                          onPressed: null
+                          onPressed: () => getImage(ImageSource.gallery)
                       ),
                     ],
                   ),
@@ -157,6 +158,14 @@ class _AddArticleState extends State<AddArticle> {
 
   }
 
+  //
+  Future getImage(ImageSource source)async{
+    var newImage = await ImagePicker.pickImage(source: source);
+    setState(() {
+      image = newImage.path;
+    });
+
+  }
 
 }
 
