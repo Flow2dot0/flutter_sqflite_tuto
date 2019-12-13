@@ -138,6 +138,22 @@ class DatabaseClient{
     return items;
   }
 
+  //get article
+  Future<Article> getArticle(int item, int id)async{
+    // call db
+    Database myDb = await database;
+    // query and exec
+    List<Map<String, dynamic>> res = await myDb.rawQuery("SELECT * FROM article WHERE item=$item AND id=$id");
+    // new article
+    Article article = Article();
+    // loop on Map<dynamic, dynamic> mapName
+    res.forEach((map) {
+      // consider only one row
+      article.fromMap(map);
+    });
+    return article;
+  }
+
   // get all articles
   Future<List<Article>> getArticles(int item,)async{
     // call db

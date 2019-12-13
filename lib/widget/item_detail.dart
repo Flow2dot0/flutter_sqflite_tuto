@@ -46,52 +46,56 @@ class _ItemDetailState extends State<ItemDetail> {
                 });
               },
               child: Text("Add", style: TextStyle(
-                color: Colors.white
+                  color: Colors.white
               ),)
           )
         ],
       ),
       // check data
       body: (articles==null || articles.length == 0)
-      ?
+          ?
       EmptyData()
           :
-          GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1),
-              itemCount: articles.length,
-              itemBuilder: (context, i) {
-                Article article = articles[i];
-                return InkWell(
-                  onLongPress: () {
-                    print('coucou');
-                    Navigator.push(context, MaterialPageRoute(builder: (BuildContext builContext) {
-                      return AddArticle(widget.item.id, idArticle: article.id,);
-                    })).then((a) {
-                      getList();
-                    });
-                  },
-                  child: Card(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        Text(article.name),
-                        (article.image==null) ? Image.asset("assets/img/no_image.png", height: 200,) : Image.file(File(article.image)),
-                        Text((article.price==null ? 'No price given' : 'Price: ${article.price}')),
-                        Text((article.shop==null ? 'No shop given' : 'Shop: ${article.shop}')),
-                        IconButton(
-                            icon: Icon(Icons.delete),
-                            onPressed: () {
-                              DatabaseClient().deleteArticle(article.id).then((int){
-                                // refresh the list
-                                getList();
-                              });
-                            }
-                        )
-                      ],
+      GridView.builder(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1),
+          itemCount: articles.length,
+          itemBuilder: (context, i) {
+            Article article = articles[i];
+            return InkWell(
+              onLongPress: () {
+                print('coucou');
+                Navigator.push(context, MaterialPageRoute(builder: (BuildContext builContext) {
+                  return AddArticle(widget.item.id, idArticle: article.id,);
+                })).then((a) {
+                  getList();
+                });
+              },
+              child: Card(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Text(article.name.toUpperCase(),textScaleFactor: 2, style: TextStyle(
+                      fontWeight: FontWeight.bold
+                    ),),
+                    Container(
+                      child: (article.image==null) ? Image.asset("assets/img/no_image.png", height: 200,) : Image.file(File(article.image), height: 200,),
                     ),
-                  ),
-                );
-              }),
+                    Text((article.price==null ? 'No price given' : 'Price: ${article.price}')),
+                    Text((article.shop==null ? 'No shop given' : 'Shop: ${article.shop}')),
+                    IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () {
+                          DatabaseClient().deleteArticle(article.id).then((int){
+                            // refresh the list
+                            getList();
+                          });
+                        }
+                    )
+                  ],
+                ),
+              ),
+            );
+          }),
     );
   }
 

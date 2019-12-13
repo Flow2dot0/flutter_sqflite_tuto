@@ -1,8 +1,8 @@
 import 'dart:io';
 
+import 'package:flutter_sqlite_from_tuto/model/database_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sqlite_from_tuto/model/article.dart';
-import 'package:flutter_sqlite_from_tuto/model/database_client.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddArticle extends StatefulWidget{
@@ -24,7 +24,15 @@ class AddArticle extends StatefulWidget{
 class _AddArticleState extends State<AddArticle> {
 
   String image, name, shop, price;
-  
+  Article article;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getArticle();
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -57,9 +65,9 @@ class _AddArticleState extends State<AddArticle> {
                   // check data
                   (image == null)
                   ?
-                      Image.asset('assets/img/no_image.png')
+                      Image.asset('assets/img/no_image.png', height: 200.00,)
                       :
-                      Image.file(File(image)),
+                      Image.file(File(image), height: 200.00,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
@@ -77,9 +85,9 @@ class _AddArticleState extends State<AddArticle> {
                     padding: EdgeInsets.all(50.0),
                     child: Column(
                       children: <Widget>[
-                        myTextField(TypeTextField.name, "Name of article"),
-                        myTextField(TypeTextField.price, "Price"),
-                        myTextField(TypeTextField.shop, "Shop")
+                        myTextField(TypeTextField.name, "Name of article", name),
+                        myTextField(TypeTextField.price, "Price", price),
+                        myTextField(TypeTextField.shop, "Shop", shop)
                       ],
                     ),
                   )
@@ -93,10 +101,11 @@ class _AddArticleState extends State<AddArticle> {
   }
 
   // switch textfield setter
-  TextField myTextField(TypeTextField type, String label){
+  TextField myTextField(TypeTextField type, String label, String value){
     return TextField(
       decoration: InputDecoration(
         labelText: label,
+        hintText: value,
       ),
       onChanged: (String str) {
         // set the right string
@@ -158,13 +167,25 @@ class _AddArticleState extends State<AddArticle> {
 
   }
 
+  Future<void> getArticle() async{
+   article = await DatabaseClient().getArticle(widget.id, widget.idArticle);
+   if(article!=null){
+     setState(() {
+       this.image = (article.image!=null? article.image : null);
+       this.name = (article.name!=null? article.name : null);
+       this.price = (article.price!=null? article.price : null);
+       this.shop = (article.shop!=null? article.shop : null);
+     });
+   }
+  }
 
   Future getImage(ImageSource source)async{
     var newImage = await ImagePicker.pickImage(source: source);
-    setState(() {
-      image = newImage.path;
-    });
-
+    if(newImage!=null){
+      setState(() {
+        image = newImage.path;
+      });
+    }
   }
 
 }
